@@ -1,16 +1,22 @@
-# google_map_live
+# Flutter Live Location Tracker
 
-A new Flutter project.
+Source Code for flutter Live Location Tracker using goooglmap and location package.<br>
 
-## Getting Started
+## App Features
+- Add current location to firebase and locate it in google map.<br>
+- Enable your live location and track it live in other devices.<br><br>
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+For Step By Step Guide Follow Video Tutorials:
+- [Flutter Live Location Tracker - Google map and Firebase + Source Code](https://bit.ly/3hlM3Lr)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Links used in project:
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [Cloud Console](https://bit.ly/3qLUjY9)
+- [Location Package](https://bit.ly/2XcsBcX)
+- [Google Map Package](https://bit.ly/2Vu1SYC)
+- [Permission Handler Package](https://bit.ly/2X1WAnE)
+<br><br>
+
+Feel Free to copy the code and use it.<br><br>
+Don't forget to star the repo and like the video :)

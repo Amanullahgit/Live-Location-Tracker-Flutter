@@ -1,144 +1,80 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_map_live/mymap.dart';
-import 'package:location/location.dart' as loc;
-import 'package:permission_handler/permission_handler.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+import 'backend/firebase/firebase_config.dart';
+import 'flutter_flow/flutter_flow_theme.dart';
+import 'flutter_flow/flutter_flow_util.dart';
+import 'flutter_flow/internationalization.dart';
+import 'flutter_flow/nav/nav.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MaterialApp(home: MyApp()));
+  usePathUrlStrategy();
+  await initFirebase();
+
+  await FlutterFlowTheme.initialize();
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
+
+  static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>()!;
 }
 
 class _MyAppState extends State<MyApp> {
-  final loc.Location location = loc.Location();
-  StreamSubscription<loc.LocationData>? _locationSubscription;
+  Locale? _locale;
+  ThemeMode _themeMode = FlutterFlowTheme.themeMode;
+
+  late AppStateNotifier _appStateNotifier;
+  late GoRouter _router;
 
   @override
   void initState() {
     super.initState();
-    _requestPermission();
-    // location.changeSettings(interval: 300, accuracy: loc.LocationAccuracy.high);
-    // location.enableBackgroundMode(enable: true);
+
+    _appStateNotifier = AppStateNotifier.instance;
+    _router = createRouter(_appStateNotifier);
   }
+
+  void setLocale(String language) {
+    setState(() => _locale = createLocale(language));
+  }
+
+  void setThemeMode(ThemeMode mode) => setState(() {
+        _themeMode = mode;
+        FlutterFlowTheme.saveThemeMode(mode);
+      });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('live location tracker'),
+    return MaterialApp.router(
+      title: 'LiveLocationTrackerFlutter',
+      localizationsDelegates: const [
+        FFLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: _locale,
+      supportedLocales: const [Locale('en', '')],
+      theme: ThemeData(
+        brightness: Brightness.light,
+        scrollbarTheme: const ScrollbarThemeData(),
       ),
-      body: Column(
-        children: [
-          TextButton(
-              onPressed: () {
-                _getLocation();
-              },
-              child: Text('add my location')),
-          TextButton(
-              onPressed: () {
-                _listenLocation();
-              },
-              child: Text('enable live location')),
-          TextButton(
-              onPressed: () {
-                _stopListening();
-              },
-              child: Text('stop live location')),
-          Expanded(
-              child: StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collection('location').snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(child: CircularProgressIndicator());
-              }
-              return ListView.builder(
-                  itemCount: snapshot.data?.docs.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title:
-                          Text(snapshot.data!.docs[index]['name'].toString()),
-                      subtitle: Row(
-                        children: [
-                          Text(snapshot.data!.docs[index]['latitude']
-                              .toString()),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(snapshot.data!.docs[index]['longitude']
-                              .toString()),
-                        ],
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.directions),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  MyMap(snapshot.data!.docs[index].id)));
-                        },
-                      ),
-                    );
-                  });
-            },
-          )),
-        ],
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scrollbarTheme: const ScrollbarThemeData(),
       ),
+      themeMode: _themeMode,
+      routerConfig: _router,
     );
-  }
-
-  _getLocation() async {
-    try {
-      final loc.LocationData _locationResult = await location.getLocation();
-      await FirebaseFirestore.instance.collection('location').doc('user1').set({
-        'latitude': _locationResult.latitude,
-        'longitude': _locationResult.longitude,
-        'name': 'john'
-      }, SetOptions(merge: true));
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> _listenLocation() async {
-    _locationSubscription = location.onLocationChanged.handleError((onError) {
-      print(onError);
-      _locationSubscription?.cancel();
-      setState(() {
-        _locationSubscription = null;
-      });
-    }).listen((loc.LocationData currentlocation) async {
-      await FirebaseFirestore.instance.collection('location').doc('user1').set({
-        'latitude': currentlocation.latitude,
-        'longitude': currentlocation.longitude,
-        'name': 'john'
-      }, SetOptions(merge: true));
-    });
-  }
-
-  _stopListening() {
-    _locationSubscription?.cancel();
-    setState(() {
-      _locationSubscription = null;
-    });
-  }
-
-  _requestPermission() async {
-    var status = await Permission.location.request();
-    if (status.isGranted) {
-      print('done');
-    } else if (status.isDenied) {
-      _requestPermission();
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
-    }
   }
 }

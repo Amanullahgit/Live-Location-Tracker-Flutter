@@ -1,27 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.aaddev.my_loc">
-
-    <!-- added these permissions -->
-        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-<uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    package="com.mycompany.livelocationtrackerflutter"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 
-   <application
-        android:label="google_map_live"
-        android:icon="@mipmap/ic_launcher">
-
-        <!-- added api key -->
-            <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="YOUR API"/>
-
+    <application
+        android:label="LiveLocationTrackerFlutter"
+        tools:replace="android:label"
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true">
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
             android:exported="true"
+            android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
@@ -47,11 +39,24 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Deep linking -->
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="livelocationtrackerflutter" android:host="livelocationtrackerflutter.com" />
+            </intent-filter>
+
         </activity>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+
+
     </application>
 </manifest>

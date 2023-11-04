@@ -1,4 +1,4 @@
-package com.aaddev.my_loc
+package com.mycompany.livelocationtrackerflutter
 
 import io.flutter.embedding.android.FlutterActivity
 

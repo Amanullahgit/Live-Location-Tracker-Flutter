@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "547670031454",
+    "project_id": "maps-tracking-2f425",
+    "storage_bucket": "maps-tracking-2f425.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547670031454:android:324100c052448acd58c8cf",
+        "android_client_info": {
+          "package_name": "com.mycompany.epath"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZn5RLiMNamcjTxQK_uI9-yiT-mnBYEzw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547670031454:android:6997dabcc9d4577c58c8cf",
+        "android_client_info": {
+          "package_name": "com.mycompany.livelocationtrackerflutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZn5RLiMNamcjTxQK_uI9-yiT-mnBYEzw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
